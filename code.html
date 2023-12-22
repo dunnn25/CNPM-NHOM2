@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title id="pageTitle">Chọn chức vụ</title>
+    <style>
+        body {
+            font-family: Calibri, sans-serif;
+            background-color: #ADD8E6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            border: 1px solid black;
+            padding: 20px;
+            margin: 10px;
+            background-color: white;
+            border-radius: 10px;
+            width: 75%;
+            box-sizing: border-box;
+        }
+        .hidden {
+            display: none;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border-radius: 4px;
+            border: 2px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+        }
+        .big-button {
+            font-size: 20px;
+            padding: 20px 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        #header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        #backButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 50px;
+            height: 50px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H6M12 5l-7 7 7 7"></path></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #addButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #doctorForm, #patientForm {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Màn hình chọn chức vụ -->
+    <div id="roleScreen" class="container">
+        <h2 id="header">Chọn chức vụ</h2>
+   
+        <button class="big-button" id="admin" name="role" value="admin" onclick="showLoginScreen('admin')">Người quản lý</button>
+        <button class="big-button" id="doctor" name="role" value="doctor" onclick="showLoginScreen('doctor')">Bác sĩ</button>
+    </div>
+    <!-- Màn hình đăng nhập -->
+    <div id="loginScreen" class="container hidden">
+        <h2 id="header">Đăng nhập</h2>
+   
+        <input type="text" id="username" placeholder="Tên người dùng">
+        <input type="password" id="password" placeholder="Mật khẩu">
+   
+        <button id="loginButton" onclick="login()">Đăng nhập</button>
+    </div>
+    <!-- Trang chủ -->
+    <div id="homeScreen" class="container hidden">
+        <button id="backButton" onclick="goBack()"></button>
+        <h4>Nguyễn Văn A</h4>
+        <h2 id="header">PHẦN MỀM WEB QUẢN LÝ BỆNH VIỆN</h2>
+        <button onclick="showDoctorScreen()">Bác sĩ</button>
+        <button onclick="showPatientScreen()">Bệnh nhân</button>
+     
+        <div style="background-image: url(/images/background.png);">
+          <span style="color: white; font-size: 24px;">Phần mềm quản lý bệnh viện</span>
+        </div>
+      </div>
+    <!-- Danh sách bác sĩ -->
+    <div id="doctorScreen" class="container hidden">
+        <button id="backButton" onclick="goBack()"></button>
+        <button id="addButton" onclick="toggleDoctorForm()"></button>
+        <h2 id="header">DANH SÁCH BÁC SĨ</h2>
+        <table id="doctorTable">
+            <tr>
+                <th>STT</th>
+                <th>Họ tên</th>
+                <th>Giới tính</th>
+                <th>Chuyên khoa</th>
+                <th>Địa chỉ</th>
+                <th>SĐT liên hệ</th>
+            </tr>
+            <!-- Thêm các dòng cho từng bác sĩ ở đây -->
+        </table>
+        <form id="doctorForm">
+            <input type="text" id="doctorName" placeholder="Họ tên">
+            <input type="text" id="doctorGender" placeholder="Giới tính">
+            <input type="text" id="doctorSpecialty" placeholder="Chuyên khoa">
+            <input type="text" id="doctorAddress" placeholder="Địa chỉ">
+            <input type="text" id="doctorPhone" placeholder="SĐT liên hệ">
+            <button type="submit" onclick="addDoctor()">Thêm bác sĩ</button>
+        </form>
+    </div>
+
+
+    <!-- Danh sách bệnh nhân -->
+    <div id="patientScreen" class="container hidden">
+        <button id="backButton" onclick="goBack()"></button>
+        <button id="addButton" onclick="togglePatientForm()"></button>
+        <h2 id="header">DANH SÁCH BỆNH NHÂN</h2>
+        <table id="patientTable">
+            <tr>
+                <th>STT</th>
+                <th>Họ tên</th>
+                <th>Giới tính</th>
+                <th>Bệnh án</th>
+                <th>SĐT liên hệ</th>
+            </tr>
+            <!-- Thêm các dòng cho từng bệnh nhân ở đây -->
+        </table>
+        <form id="patientForm">
+            <input type="text" id="patientName" placeholder="Họ tên">
+            <input type="text" id="patientGender" placeholder="Giới tính">
+            <input type="text" id="patientMedicalRecord" placeholder="Bệnh án">
+            <input type="text" id="patientPhone" placeholder="SĐT liên hệ">
+            <button type="submit" onclick="addPatient()">Thêm bệnh nhân</button>
+        </form>
+    </div>
+</body>
+<script>
+    var role = '';
+    var lastActivity = new Date().getTime();
+
+    function showLoginScreen(selectedRole) {
+        role = selectedRole;
+        document.getElementById('roleScreen').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('pageTitle').innerText = 'Đăng nhập';
+    }
+
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        if(username === 'admin' && password === '123456' && role === 'admin')
+        {
+            alert('Đăng nhập thành công!');
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.remove('hidden');
+            document.getElementById('pageTitle').innerText = 'Trang chủ';
+            lastActivity = new Date().getTime();
+            setInterval(checkActivity, 1000);
+        } else if (username === 'bacsi' && password === '123' && role === 'doctor')
+        {
+            alert('Đăng nhập thành công!');
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.remove('hidden');
+            document.getElementById('pageTitle').innerText = 'Trang chủ';
+            lastActivity = new Date().getTime();
+            setInterval(checkActivity, 1000);
+        }
+        else {
+            alert('Tên người dùng hoặc mật khẩu không đúng!');
+        }
+    }
+
+    function showDoctorScreen() {
+        document.getElementById('homeScreen').classList.add('hidden');
+        document.getElementById('doctorScreen').classList.remove('hidden');
+        document.getElementById('pageTitle').innerText = 'Bác sĩ';
+    }
+
+    function showPatientScreen() {
+        document.getElementById('homeScreen').classList.add('hidden');
+        document.getElementById('patientScreen').classList.remove('hidden');
+        document.getElementById('pageTitle').innerText = 'Bệnh nhân';
+    }
+    function addDoctor() {
+        // Lấy thông tin bác sĩ từ các input
+        const name = document.getElementById('doctorName').value;
+        const gender = document.getElementById('doctorGender').value;
+        const specialty = document.getElementById('doctorSpecialty').value;
+        const address = document.getElementById('doctorAddress').value;
+        const phone = document.getElementById('doctorPhone').value;
+      
+        if (name === '') {
+            alert('Vui lòng nhập tên bác sĩ');
+            return;
+          }
+        
+          if (gender === '') {
+            alert('Vui lòng nhập giới tính bác sĩ');
+            return;
+          }
+        
+          if (specialty === '') {
+            alert('Vui lòng nhập chuyên khoa bác sĩ');
+            return;
+          }
+        
+          if (address === '') {
+            alert('Vui lòng nhập địa chỉ bác sĩ');
+            return;
+          }
+        
+          if (phone === '') {
+            alert('Vui lòng nhập số điện thoại bác sĩ');
+            return;
+          }
+        // Tạo một dòng mới trong bảng bác sĩ với thông tin đã nhập
+        const table = document.getElementById('doctorTable');
+        const row = table.insertRow();
+        row.insertCell().textContent = table.rows.length; // STT
+        row.insertCell().textContent = name;
+        row.insertCell().textContent = gender;
+        row.insertCell().textContent = specialty;
+        row.insertCell().textContent = address;
+        row.insertCell().textContent = phone;
+      
+        // Xóa dữ liệu trong các input sau khi thêm
+        document.getElementById('doctorForm').reset();}
+    
+      
+      function addPatient() {
+        // Lấy thông tin bệnh nhân từ các input
+        const name = document.getElementById('patientName').value;
+        const gender = document.getElementById('patientGender').value;
+        const medicalRecord = document.getElementById('patientMedicalRecord').value;
+        const phone = document.getElementById('patientPhone').value;
+        
+        if (name === '') {
+            alert('Vui lòng nhập tên bệnh nhân');
+            return;
+          }
+        
+          if (gender === '') {
+            alert('Vui lòng nhập giới tính bệnh nhân');
+            return;
+          }
+        
+          if (medicalRecord === '') {
+            alert('Vui lòng nhập hồ sơ bệnh án');
+            return;
+          }
+        
+          if (phone === '') {
+            alert('Vui lòng nhập số điện thoại bệnh nhân');
+            return;
+          }
+
+        // Tạo một dòng mới trong bảng bệnh nhân với thông tin đã nhập
+        const table = document.getElementById('patientTable');
+        const row = table.insertRow();
+        row.insertCell().textContent = table.rows.length; // STT
+        row.insertCell().textContent = name;
+        row.insertCell().textContent = gender;
+        row.insertCell().textContent = medicalRecord;
+        row.insertCell().textContent = phone;
+      
+        // Xóa dữ liệu trong các input sau khi thêm
+        document.getElementById('patientForm').reset();
+    }
+
+    function goBack() {
+        if (document.getElementById('homeScreen').classList.contains('hidden') === false) {
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('roleScreen').classList.remove('hidden');
+            document.getElementById('pageTitle').innerText = 'Chọn chức vụ';
+        } else if (document.getElementById('doctorScreen').classList.contains('hidden') === false) {
+            document.getElementById('doctorScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.remove('hidden');
+            document.getElementById('pageTitle').innerText = 'Trang chủ';
+        } else if (document.getElementById('patientScreen').classList.contains('hidden') === false) {
+            document.getElementById('patientScreen').classList.add('hidden');
+            document.getElementById('homeScreen').classList.remove('hidden');
+            document.getElementById('pageTitle').innerText = 'Trang chủ';
+        }
+    }
+
+    function toggleDoctorForm() {
+        var form = document.getElementById('doctorForm');
+        if (form.style.display === "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+
+    function togglePatientForm() {
+        var form = document.getElementById('patientForm');
+        if (form.style.display === "none") {
+            form.style.display = "block";
+        } else {
+            form.style.display = "none";
+        }
+    }
+
+    function checkActivity() {
+        if(new Date().getTime() - lastActivity > 600000) {
+            alert('Bạn đã không hoạt động trong 10 phút. Vui lòng đăng nhập lại.');
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('pageTitle').innerText = 'Đăng nhập';
+        }
+    }
+</script>
+</html>
